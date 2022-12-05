@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import img1 from './static/pipeline.jpg';
 import img2 from './static/jaws.jpg';
@@ -10,6 +10,8 @@ import travel from './static/travel.jpg';
 import surfboards from './static/surfboards.jpg';
 
 function HomeScreen() {
+
+  const [carouselTitle, setCarouselTitle] = useState("Pipeline")
 
   useEffect(() => {
     const buttons = document.querySelectorAll("[data-carousel-button]")
@@ -23,7 +25,7 @@ function HomeScreen() {
         let newIndex = [...slides.children].indexOf(activeSlide) + offset
         if (newIndex < 0) newIndex = slides.children.length - 1
         if (newIndex >= slides.children.length) newIndex = 0
-    
+
         slides.children[newIndex].dataset.active = true
         delete activeSlide.dataset.active
         })
@@ -55,7 +57,7 @@ function HomeScreen() {
                 <li className="slide"><img src={img2} className="home-image" alt="Jaws"/></li>
                 <li className="slide"><img src={img3} className="home-image" alt="Waikiki"/></li>
             </ul>
-          <div class="imgTitle">Pipeline</div>
+          <div class="imgTitle">{carouselTitle}</div>
         </div>
       </div>
       <div className='homeCategories'>
