@@ -1,2 +1,2 @@
-# hawaiisurf
+# Hawaii Surf
 Surf Website
