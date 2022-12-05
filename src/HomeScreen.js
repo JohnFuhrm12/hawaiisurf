@@ -9,7 +9,7 @@ import swell from './static/swell.jpg';
 import travel from './static/travel.jpg';
 import surfboards from './static/surfboards.jpg';
 
-function HomeScreen() {
+function HomeScreen( {...props} ) {
 
   const [carouselTitle, setCarouselTitle] = useState("Pipeline")
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -56,7 +56,8 @@ function HomeScreen() {
   }, [indexUpdate]);
 
   function showForecasts() {
-    console.log("FORECASTS")
+    props.setHome(false)
+    props.setForecasts(true)
   }
 
   return (
