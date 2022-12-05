@@ -207,3 +207,56 @@ html, body {
 }
 
 /* Forecasts */
+
+/* Forecast Info */
+.forecastInfoWrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.forecastTitleBlock {
+  margin-inline: 5%;
+  text-align: center;
+}
+
+.forecastInfoIMG {
+  max-width: 600px;
+  max-height: 600px;
+  border-radius: 20px;
+}
+
+.forecastInfoTitle {
+ font-size: 40px;
+}
+
+.mainForecastBlock {
+  margin-top: 4%;
+  margin-left: 10%;
+  max-width: 550px;
+  align-items: center;
+}
+
+.surfHeightBubble {
+  background-color: lime;
+  max-width: 280px;
+  max-height: 80px;
+  text-align: center;
+  border-radius: 20px;
+  box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.34);
+  margin-left: 18%;
+}
+
+.surfHeight {
+  font-size: 40px;
+  padding-top: 5%;
+  padding-bottom: 5%;
+}
+
+.forecastTextWrapper {
+  max-width: 550px;
+}
+
+.forecastText {
+  font-size: 23px;
+}
+/* Forecast Info */
