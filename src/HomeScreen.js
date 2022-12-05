@@ -12,9 +12,30 @@ import surfboards from './static/surfboards.jpg';
 function HomeScreen() {
 
   const [carouselTitle, setCarouselTitle] = useState("Pipeline")
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [indexUpdate, setIndexUpdate] = useState(0)
+
+  function updateIndex() {
+    if (indexUpdate === 0) {
+      setIndexUpdate(1)
+    }
+    if (indexUpdate === 1) {
+      setIndexUpdate(0)
+    }
+  }
 
   useEffect(() => {
     const buttons = document.querySelectorAll("[data-carousel-button]")
+
+    if (currentIndex === 0) {
+      setCarouselTitle("Pipeline")
+    }
+    if (currentIndex === 1) {
+      setCarouselTitle("Jaws")
+    }
+    if (currentIndex === 2) {
+      setCarouselTitle("Waikiki")
+    }
 
     buttons.forEach(button => {
       button.addEventListener("click", () => {
@@ -26,11 +47,13 @@ function HomeScreen() {
         if (newIndex < 0) newIndex = slides.children.length - 1
         if (newIndex >= slides.children.length) newIndex = 0
 
+        setCurrentIndex(newIndex)
+
         slides.children[newIndex].dataset.active = true
         delete activeSlide.dataset.active
         })
     });
-  });
+  }, [indexUpdate]);
 
   function showForecasts() {
     console.log("FORECASTS")
@@ -50,8 +73,8 @@ function HomeScreen() {
       </div>
       <div className='carouselBlock'>
         <div className="carousel" data-carousel>
-            <button className="prev" data-carousel-button="prev">&#8249;</button>
-            <button className="next" data-carousel-button="next">&#8250;</button>
+            <button onClick={updateIndex} className="prev" data-carousel-button="prev">&#8249;</button>
+            <button onClick={updateIndex} className="next" data-carousel-button="next">&#8250;</button>
             <ul data-slides>
                 <li className="slide" data-active><img src={img1} className="home-image" alt="Pipeline"/></li>
                 <li className="slide"><img src={img2} className="home-image" alt="Jaws"/></li>
