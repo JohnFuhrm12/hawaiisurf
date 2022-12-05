@@ -16,6 +16,11 @@ function Forecasts( {...props} ) {
     props.setForecasts(false)
   }
 
+  function showForecastInfo() {
+    props.setForecastInfo(true)
+    props.setForecasts(false)
+  }
+
   function showForecasts() {
     console.log("FORECASTS")
   }
@@ -39,7 +44,7 @@ function Forecasts( {...props} ) {
         <div className='forecastRow'>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Pipeline</h2>
-                <img className='forecastIMG' src={img1} alt='Pipeline'/>
+                <img onClick={showForecastInfo} className='forecastIMG' src={img1} alt='Pipeline'/>
             </div>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Jaws</h2>
