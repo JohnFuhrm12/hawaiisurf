@@ -11,8 +11,18 @@ function ForecastInfo( {...props} ) {
   const [swellWaveHeightsMinFeet, setSwellWaveHeightsMinFeet] = useState(0)
   const [swellWaveHeightsMaxFeet, setSwellWaveHeightsMaxFeet] = useState(0)
 
+  const [windWaveHeightsMinMeters, setWindWaveHeightsMinMeters] = useState(0)
+  const [windWaveHeightsMaxMeters, setWindWaveHeightsMaxMeters] = useState(0)
+
+  const [windWaveHeightsMinFeet, setWindWaveHeightsMinFeet] = useState(0)
+  const [windWaveHeightsMaxFeet, setWindWaveHeightsMaxFeet] = useState(0)
+
   const [waveHeightsMinFeetRounded, setWaveHeightsMinFeetRounded] = useState(0)
   const [waveHeightsMaxFeetRounded, setWaveHeightsMaxFeetRounded] = useState(0)
+
+  const [waveDirectionDegrees, setWaveDirectionDegrees] = useState(0)
+
+
 
   var day = 0;
   var month = 0;
@@ -27,26 +37,43 @@ function ForecastInfo( {...props} ) {
   }, [])
 
   useEffect(() => {
-    //setWaveHeight()
+    setWaveHeight()
   })
 
   // Call Open-Meteo API
   const getData = () => {
       axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
         const swellWaveHeights = res.data.hourly.swell_wave_height;
-        console.log(swellWaveHeights)
-        //setWaveHeightsMinMeters(Math.min(...waveHeights));
-        //setWaveHeightsMaxMeters(Math.max(...waveHeights));
+        const windWaveHeights = res.data.hourly.wind_wave_height;
+        const waveDirection = res.data.hourly.wave_direction[0];
 
-        //setWaveHeightsMinFeet(Math.min(...waveHeights) * 3.28084);
-        //setWaveHeightsMaxFeet(Math.max(...waveHeights) * 3.28084);
+        setWaveDirectionDegrees(waveDirection);
+
+        setSwellWaveHeightsMinMeters(Math.min(...swellWaveHeights));
+        setSwellWaveHeightsMaxMeters(Math.max(...swellWaveHeights));
+
+        setWindWaveHeightsMinMeters(Math.min(...windWaveHeights));
+        setWindWaveHeightsMaxMeters(Math.max(...windWaveHeights));
+
+        setSwellWaveHeightsMinFeet(Math.min(...swellWaveHeights) * 3.28084);
+        setSwellWaveHeightsMaxFeet(Math.max(...swellWaveHeights) * 3.28084);
+
+        setWindWaveHeightsMinFeet(Math.min(...windWaveHeights) * 3.28084);
+        setWindWaveHeightsMaxFeet(Math.max(...windWaveHeights) * 3.28084);
       }
     );
   };
 
-  function setWaveHeight(){
-    //setWaveHeightsMinFeetRounded(Math.round(waveHeightsMinFeet));
-    //setWaveHeightsMaxFeetRounded(Math.round(waveHeightsMaxFeet));
+  function setWaveHeight() {
+    // Set Predicted Wave Height to wind, or swell depending on if swell direction is correct
+    if (waveDirectionDegrees > 260 && waveDirectionDegrees < 360) {
+      setWaveHeightsMinFeetRounded(Math.round(swellWaveHeightsMinFeet));
+      setWaveHeightsMaxFeetRounded(Math.round(swellWaveHeightsMaxFeet));
+    }
+    else {
+      setWaveHeightsMinFeetRounded(Math.round(windWaveHeightsMinFeet));
+      setWaveHeightsMaxFeetRounded(Math.round(windWaveHeightsMaxFeet));
+    }
   }
 
   function showHome() {
