@@ -209,9 +209,15 @@ html, body {
 /* Forecasts */
 
 /* Forecast Info */
+.forecastInfoVerticalWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .forecastInfoWrapper {
   display: flex;
   flex-direction: row;
+  margin-top: 1%;
 }
 
 .forecastTitleBlock {
@@ -223,10 +229,11 @@ html, body {
   max-width: 600px;
   max-height: 600px;
   border-radius: 20px;
+  box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.34);
 }
 
 .forecastInfoTitle {
- font-size: 40px;
+ font-size: 35px;
 }
 
 .mainForecastBlock {
@@ -236,14 +243,21 @@ html, body {
   align-items: center;
 }
 
+.heightTitle {
+  font-size: 25px;
+  margin: 0;
+  margin-left: 20%;
+}
+
 .surfHeightBubble {
   background-color: lime;
-  max-width: 280px;
+  max-width: 260px;
   max-height: 80px;
   text-align: center;
   border-radius: 20px;
   box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.34);
   margin-left: 18%;
+  margin-top: -20px;
 }
 
 .surfHeight {
@@ -258,5 +272,45 @@ html, body {
 
 .forecastText {
   font-size: 23px;
+}
+
+.forecastInfoSecondColumnWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+
+.swellWindBlock {
+  margin-left: -8%;
+}
+
+.swellWindTitle {
+  font-size: 35px;
+}
+
+.swellTitle {
+  margin-top: 10%;
+  font-size: 30px;
+}
+
+.windTitle {
+  margin-top: 10%;
+  font-size: 30px;
+}
+
+.conditionsTitle {
+  font-size: 35px;
+}
+
+.airTemp {
+  margin-top: 10%;
+  font-size: 30px;
+}
+
+.waterTemp {
+  margin-top: 10%;
+  font-size: 30px;
 }
 /* Forecast Info */
