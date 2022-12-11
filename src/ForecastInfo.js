@@ -5,9 +5,18 @@ import { useEffect, useState } from 'react';
 import img1 from './static/pipeF.jpg';
 
 function ForecastInfo( {...props} ) {
-  var day = 0
-  var month = 0
-  var year = 0
+  const [swellWaveHeightsMinMeters, setSwellWaveHeightsMinMeters] = useState(0)
+  const [swellWaveHeightsMaxMeters, setSwellWaveHeightsMaxMeters] = useState(0)
+
+  const [swellWaveHeightsMinFeet, setSwellWaveHeightsMinFeet] = useState(0)
+  const [swellWaveHeightsMaxFeet, setSwellWaveHeightsMaxFeet] = useState(0)
+
+  const [waveHeightsMinFeetRounded, setWaveHeightsMinFeetRounded] = useState(0)
+  const [waveHeightsMaxFeetRounded, setWaveHeightsMaxFeetRounded] = useState(0)
+
+  var day = 0;
+  var month = 0;
+  var year = 0;
 
   useEffect(() => {
     var today = new Date();
@@ -17,20 +26,28 @@ function ForecastInfo( {...props} ) {
     getData()
   }, [])
 
+  useEffect(() => {
+    //setWaveHeight()
+  })
+
+  // Call Open-Meteo API
   const getData = () => {
-      axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline
-        const waveHeights = res.data.hourly.wave_height;
-        const waveHeightsMin = Math.min(...waveHeights);
-        const waveHeightsMax = Math.max(...waveHeights);
-        console.log(waveHeightsMin);
-        console.log(waveHeightsMax);
+      axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
+        const swellWaveHeights = res.data.hourly.swell_wave_height;
+        console.log(swellWaveHeights)
+        //setWaveHeightsMinMeters(Math.min(...waveHeights));
+        //setWaveHeightsMaxMeters(Math.max(...waveHeights));
+
+        //setWaveHeightsMinFeet(Math.min(...waveHeights) * 3.28084);
+        //setWaveHeightsMaxFeet(Math.max(...waveHeights) * 3.28084);
       }
     );
   };
 
-  useEffect(() => {
-    console.log(`DAY: ${day} MONTH: ${month} YEAR: ${year}`)
-  })
+  function setWaveHeight(){
+    //setWaveHeightsMinFeetRounded(Math.round(waveHeightsMinFeet));
+    //setWaveHeightsMaxFeetRounded(Math.round(waveHeightsMaxFeet));
+  }
 
   function showHome() {
     props.setHome(true)
@@ -63,7 +80,7 @@ function ForecastInfo( {...props} ) {
             <div className='mainForecastBlock'>
                 <h2 className='heightTitle'>Surf Height</h2>
                 <div className='surfHeightBubble'>
-                    <h2 className='surfHeight'>4-6 ft. - Fair</h2>
+                    <h2 className='surfHeight'>{waveHeightsMinFeetRounded}-{waveHeightsMaxFeetRounded} ft. - Fair</h2>
                 </div>
                 <div className='forecastTextWrapper'>
                 <p className='forecastText'>Good morning. A combo of medium-long period swell from the NW and medium-long period swell from the NNE are joining with more locally-generated wind swell from the E. End result is 4-6+ ft surf with a dominant wave period of 11 seconds. As of 10:10 AM wind is moderate and cross/sideshore from the ENE (70) at 6 mph. A 0.4' low tide at 7:26 AM rises to a 0.7' high at 12:51 PM.</p>
