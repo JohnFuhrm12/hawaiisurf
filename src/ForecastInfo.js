@@ -5,22 +5,24 @@ import { useEffect, useState } from 'react';
 import img1 from './static/pipeF.jpg';
 
 function ForecastInfo( {...props} ) {
-  const [swellWaveHeightsMinMeters, setSwellWaveHeightsMinMeters] = useState(0)
-  const [swellWaveHeightsMaxMeters, setSwellWaveHeightsMaxMeters] = useState(0)
+  const [swellWaveHeightsMinMeters, setSwellWaveHeightsMinMeters] = useState(0);
+  const [swellWaveHeightsMaxMeters, setSwellWaveHeightsMaxMeters] = useState(0);
 
-  const [swellWaveHeightsMinFeet, setSwellWaveHeightsMinFeet] = useState(0)
-  const [swellWaveHeightsMaxFeet, setSwellWaveHeightsMaxFeet] = useState(0)
+  const [swellWaveHeightsMinFeet, setSwellWaveHeightsMinFeet] = useState(0);
+  const [swellWaveHeightsMaxFeet, setSwellWaveHeightsMaxFeet] = useState(0);
 
-  const [windWaveHeightsMinMeters, setWindWaveHeightsMinMeters] = useState(0)
-  const [windWaveHeightsMaxMeters, setWindWaveHeightsMaxMeters] = useState(0)
+  const [windWaveHeightsMinMeters, setWindWaveHeightsMinMeters] = useState(0);
+  const [windWaveHeightsMaxMeters, setWindWaveHeightsMaxMeters] = useState(0);
 
-  const [windWaveHeightsMinFeet, setWindWaveHeightsMinFeet] = useState(0)
-  const [windWaveHeightsMaxFeet, setWindWaveHeightsMaxFeet] = useState(0)
+  const [windWaveHeightsMinFeet, setWindWaveHeightsMinFeet] = useState(0);
+  const [windWaveHeightsMaxFeet, setWindWaveHeightsMaxFeet] = useState(0);
 
-  const [waveHeightsMinFeetRounded, setWaveHeightsMinFeetRounded] = useState(0)
-  const [waveHeightsMaxFeetRounded, setWaveHeightsMaxFeetRounded] = useState(0)
+  const [waveHeightsMinFeetRounded, setWaveHeightsMinFeetRounded] = useState(0);
+  const [waveHeightsMaxFeetRounded, setWaveHeightsMaxFeetRounded] = useState(0);
 
-  const [waveDirectionDegrees, setWaveDirectionDegrees] = useState(0)
+  const [waveDirectionDegrees, setWaveDirectionDegrees] = useState(0);
+  const [waveDirectionCompass, setWaveDirectionCompass] = useState("ENE");
+  const [wavePeriodSeconds, setWavePeriodSeconds] = useState(0);
 
 
 
@@ -33,33 +35,84 @@ function ForecastInfo( {...props} ) {
     day = String(today.getDate()).padStart(2, '0');
     month = String(today.getMonth() + 1).padStart(2, '0'); 
     year = today.getFullYear();
-    getData()
+    getData();
   }, [])
 
   useEffect(() => {
-    setWaveHeight()
+    setWaveHeight();
   })
 
   // Call Open-Meteo API
   const getData = () => {
-      axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
+      axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,wave_period,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
         const swellWaveHeights = res.data.hourly.swell_wave_height;
         const windWaveHeights = res.data.hourly.wind_wave_height;
         const waveDirection = res.data.hourly.wave_direction[0];
+        const wavePeriod = res.data.hourly.wave_period[0];
 
         setWaveDirectionDegrees(waveDirection);
+        setWavePeriodSeconds(wavePeriod);
 
-        setSwellWaveHeightsMinMeters(Math.min(...swellWaveHeights));
-        setSwellWaveHeightsMaxMeters(Math.max(...swellWaveHeights));
+        setSwellWaveHeightsMinMeters(Math.min(...swellWaveHeights).toFixed(2));
+        setSwellWaveHeightsMaxMeters(Math.max(...swellWaveHeights).toFixed(2));
 
-        setWindWaveHeightsMinMeters(Math.min(...windWaveHeights));
-        setWindWaveHeightsMaxMeters(Math.max(...windWaveHeights));
+        setWindWaveHeightsMinMeters(Math.min(...windWaveHeights).toFixed(2));
+        setWindWaveHeightsMaxMeters(Math.max(...windWaveHeights).toFixed(2));
 
-        setSwellWaveHeightsMinFeet(Math.min(...swellWaveHeights) * 3.28084);
-        setSwellWaveHeightsMaxFeet(Math.max(...swellWaveHeights) * 3.28084);
+        setSwellWaveHeightsMinFeet((Math.min(...swellWaveHeights) * 3.28084).toFixed(2));
+        setSwellWaveHeightsMaxFeet((Math.max(...swellWaveHeights) * 3.28084).toFixed(2));
 
-        setWindWaveHeightsMinFeet(Math.min(...windWaveHeights) * 3.28084);
-        setWindWaveHeightsMaxFeet(Math.max(...windWaveHeights) * 3.28084);
+        setWindWaveHeightsMinFeet((Math.min(...windWaveHeights) * 3.28084).toFixed(2));
+        setWindWaveHeightsMaxFeet((Math.max(...windWaveHeights) * 3.28084).toFixed(2));
+
+        if (waveDirection === 0) {
+          setWaveDirectionCompass("N")
+        }
+        if (waveDirection > 0 && waveDirection < 45) {
+          setWaveDirectionCompass("NNE")
+        }
+        if (waveDirection === 45) {
+          setWaveDirectionCompass("NE")
+        }
+        if (waveDirection > 45 && waveDirection < 90) {
+          setWaveDirectionCompass("ENE")
+        }
+        if (waveDirection === 90) {
+          setWaveDirectionCompass("E")
+        }
+        if (waveDirection > 90 && waveDirection < 135) {
+          setWaveDirectionCompass("ESE")
+        }
+        if (waveDirection === 135) {
+          setWaveDirectionCompass("SE")
+        }
+        if (waveDirection > 135 && waveDirection < 180) {
+          setWaveDirectionCompass("SSE")
+        }
+        if (waveDirection === 180) {
+          setWaveDirectionCompass("S")
+        }
+        if (waveDirection > 180 && waveDirection < 225) {
+          setWaveDirectionCompass("SSW")
+        }
+        if (waveDirection === 225) {
+          setWaveDirectionCompass("SW")
+        }
+        if (waveDirection > 225 && waveDirection < 270) {
+          setWaveDirectionCompass("WSW")
+        }
+        if (waveDirection === 270) {
+          setWaveDirectionCompass("W")
+        }
+        if (waveDirection > 270 && waveDirection < 315) {
+          setWaveDirectionCompass("WNW")
+        }
+        if (waveDirection === 315) {
+          setWaveDirectionCompass("NW")
+        }
+        if (waveDirection > 315) {
+          setWaveDirectionCompass("NNW")
+        }
       }
     );
   };
@@ -110,7 +163,7 @@ function ForecastInfo( {...props} ) {
                     <h2 className='surfHeight'>{waveHeightsMinFeetRounded}-{waveHeightsMaxFeetRounded} ft. - Fair</h2>
                 </div>
                 <div className='forecastTextWrapper'>
-                <p className='forecastText'>Good morning. A combo of medium-long period swell from the NW and medium-long period swell from the NNE are joining with more locally-generated wind swell from the E. End result is 4-6+ ft surf with a dominant wave period of 11 seconds. As of 10:10 AM wind is moderate and cross/sideshore from the ENE (70) at 6 mph. A 0.4' low tide at 7:26 AM rises to a 0.7' high at 12:51 PM.</p>
+                <p className='forecastText'>The Banzai Pipeline is a reef break located in Hawaii, off Ehukai Beach Park in Pupukea on O'ahu's North Shore. Pipeline is known for huge waves that break in shallow water just above a sharp and cavernous reef, forming large, hollow, thick curls of water that surfers can tube ride. There are three reefs at Pipeline in progressively deeper water that activate according to the increasing size of swell.</p>
                 </div>
             </div>
         </div>
@@ -118,8 +171,11 @@ function ForecastInfo( {...props} ) {
             <div className='swellWindBlock'>
                 <h2 className='swellWindTitle'>SWELL AND WIND</h2>
                 <h2 className='swellTitle'>Primary Swell</h2>
-                <h2 className='swellWindDetails'>Wave Height (FT.): 4.92 ft. at 9 seconds ENE @ 50°</h2>
-                <h2 className='swellWindDetails'>Wave Height (M): 1.5 m. at 9 seconds ENE @ 50°</h2>
+                <h2 className='swellWindDetails'>Wave Height (FT.): {swellWaveHeightsMaxFeet} ft. at {wavePeriodSeconds} seconds {waveDirectionCompass} @ {waveDirectionDegrees}°</h2>
+                <h2 className='swellWindDetails'>Wave Height (M): {swellWaveHeightsMaxMeters} m. at 9 seconds ENE @ 50°</h2>
+                <h2 className='swellTitle'>Wind Swell</h2>
+                <h2 className='swellWindDetails'>Wave Height (FT.): {windWaveHeightsMaxFeet} ft. at {wavePeriodSeconds} seconds {waveDirectionCompass} @ {waveDirectionDegrees}°</h2>
+                <h2 className='swellWindDetails'>Wave Height (M): {windWaveHeightsMaxMeters} m. at 9 seconds ENE @ 50°</h2>
                 <h2 className='windTitle'>Wind Direction</h2>
                 <h2 className='swellWindDetails'>Wind Speed (MPH): 17.9 mph. ESE @ 110°</h2>
                 <h2 className='swellWindDetails'>Wind Speed (KPH): 28.8 kph. ESE @ 110°</h2>
