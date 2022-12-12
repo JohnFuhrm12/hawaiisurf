@@ -30,6 +30,7 @@ function ForecastInfo( {...props} ) {
   const [windSpeedMPH, setWindSpeedMPH] = useState(0);
   const [windSpeedKPH, setWindSpeedKPH] = useState(0);
   const [windDirection, setWindDirection] = useState(0);
+  const [windDirectionCompass, setWindDirectionCompass] = useState("N");
 
   const [currentWeatherConditions, setCurrentWeatherConditions] = useState("Sunny");
 
@@ -51,7 +52,12 @@ function ForecastInfo( {...props} ) {
 
   // Call Open-Meteo API
   const getData = () => {
-      axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,wave_period,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
+    // Fetch Weekly Swell Information (Open-Meteo API)
+    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,wave_period,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => {
+      console.log(res.data);
+    });
+    // Fetch Today's Swell Information (Open-Meteo API)
+    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,wave_period,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
         const swellWaveHeights = res.data.hourly.swell_wave_height;
         const windWaveHeights = res.data.hourly.wind_wave_height;
         const waveDirection = res.data.hourly.wave_direction[0];
@@ -121,6 +127,7 @@ function ForecastInfo( {...props} ) {
           setWaveDirectionCompass("NNW")
         }
     });
+    // Fetch Today's Weather Information (OpenWeather API)
     axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=21.67&lon=-158.05&appid=73a95bf4ecd5b065a38ec246784e64ee`).then((res) => {
       const airTempC = ((res.data.main.temp) - (273.15)).toFixed(2);
       const airTempF = ((airTempC * 1.8) + (32)).toFixed(2);
@@ -143,6 +150,55 @@ function ForecastInfo( {...props} ) {
       setWindDirection(windDir);
 
       setCurrentWeatherConditions(conditionsUpperCase);
+
+      if (windDir === 0) {
+        setWindDirectionCompass("N")
+      }
+      if (windDir > 0 && windDir < 45) {
+        setWindDirectionCompass("NNE")
+      }
+      if (windDir === 45) {
+        setWindDirectionCompass("NE")
+      }
+      if (windDir > 45 && windDir < 90) {
+        setWindDirectionCompass("ENE")
+      }
+      if (windDir === 90) {
+        setWindDirectionCompass("E")
+      }
+      if (windDir > 90 && windDir < 135) {
+        setWindDirectionCompass("ESE")
+      }
+      if (windDir === 135) {
+        setWindDirectionCompass("SE")
+      }
+      if (windDir > 135 && windDir < 180) {
+        setWindDirectionCompass("SSE")
+      }
+      if (windDir === 180) {
+        setWindDirectionCompass("S")
+      }
+      if (windDir > 180 && windDir < 225) {
+        setWindDirectionCompass("SSW")
+      }
+      if (windDir === 225) {
+        setWindDirectionCompass("SW")
+      }
+      if (windDir > 225 && windDir < 270) {
+        setWindDirectionCompass("WSW")
+      }
+      if (windDir === 270) {
+        setWindDirectionCompass("W")
+      }
+      if (windDir > 270 && windDir < 315) {
+        setWindDirectionCompass("WNW")
+      }
+      if (windDir === 315) {
+        setWindDirectionCompass("NW")
+      }
+      if (windDir > 315) {
+        setWindDirectionCompass("NNW")
+      }
     });
   };
 
@@ -206,19 +262,16 @@ function ForecastInfo( {...props} ) {
                 <h2 className='swellWindDetails'>Wave Height (FT.): {windWaveHeightsMaxFeet} ft. at {wavePeriodSeconds} seconds {waveDirectionCompass} @ {waveDirectionDegrees}°</h2>
                 <h2 className='swellWindDetails'>Wave Height (M): {windWaveHeightsMaxMeters} m. at {wavePeriodSeconds}  seconds {waveDirectionCompass} @ {waveDirectionDegrees}°</h2>
                 <h2 className='windTitle'>Wind Direction</h2>
-                <h2 className='swellWindDetails'>Wind Speed (MPH): {windSpeedMPH} mph. ESE @ {windDirection}°</h2>
-                <h2 className='swellWindDetails'>Wind Speed (KPH): {windSpeedKPH} kph. ESE @ {windDirection}°</h2>
+                <h2 className='swellWindDetails'>Wind Speed (MPH): {windSpeedMPH} mph. {windDirectionCompass} @ {windDirection}°</h2>
+                <h2 className='swellWindDetails'>Wind Speed (KPH): {windSpeedKPH} kph. {windDirectionCompass} @ {windDirection}°</h2>
             </div>
             <div className='weatherConditionsBlock'>
               <h2 className='conditionsTitle'>WEATHER CONDITIONS</h2>
               <h2 className='airTemp'>Current Conditions</h2>
               <h2 className='ConditionsDetails'>{currentWeatherConditions}</h2>
               <h2 className='airTemp'>Air Temperature</h2>
-              <h2 className='ConditionsDetails'>Fahrenheit: 89°F</h2>
-              <h2 className='ConditionsDetails'>Celsius: 26°C</h2>
-              <h2 className='waterTemp'>Water Temperature</h2>
-              <h2 className='ConditionsDetails'>Fahrenheit: 79.34°F</h2>
-              <h2 className='ConditionsDetails'>Celsius: 26.3°C</h2>
+              <h2 className='ConditionsDetails'>Fahrenheit: {airTempFahrenheit}°F</h2>
+              <h2 className='ConditionsDetails'>Celsius: {airTempCelsius}°C</h2>
             </div>
         </div>
       </div>
