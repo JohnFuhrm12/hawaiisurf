@@ -21,10 +21,17 @@ function ForecastInfo( {...props} ) {
   const [waveHeightsMaxFeetRounded, setWaveHeightsMaxFeetRounded] = useState(0);
 
   const [waveDirectionDegrees, setWaveDirectionDegrees] = useState(0);
-  const [waveDirectionCompass, setWaveDirectionCompass] = useState("ENE");
+  const [waveDirectionCompass, setWaveDirectionCompass] = useState("N");
   const [wavePeriodSeconds, setWavePeriodSeconds] = useState(0);
 
+  const [airTempCelsius, setAirTempCelsius] = useState(0);
+  const [airTempFahrenheit, setAirTempFahrenheit] = useState(0);
 
+  const [windSpeedMPH, setWindSpeedMPH] = useState(0);
+  const [windSpeedKPH, setWindSpeedKPH] = useState(0);
+  const [windDirection, setWindDirection] = useState(0);
+
+  const [currentWeatherConditions, setCurrentWeatherConditions] = useState("Sunny");
 
   var day = 0;
   var month = 0;
@@ -113,8 +120,30 @@ function ForecastInfo( {...props} ) {
         if (waveDirection > 315) {
           setWaveDirectionCompass("NNW")
         }
-      }
-    );
+    });
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=21.67&lon=-158.05&appid=73a95bf4ecd5b065a38ec246784e64ee`).then((res) => {
+      const airTempC = ((res.data.main.temp) - (273.15)).toFixed(2);
+      const airTempF = ((airTempC * 1.8) + (32)).toFixed(2);
+      const windSpeedK = (res.data.wind.speed * 3.6).toFixed(2);
+      const windSpeedM = (windSpeedK * 0.62137119223733).toFixed(2);
+      const windDir = res.data.wind.deg;
+
+      const conditions = res.data.weather[0].description;
+      const words = conditions.split(" ");
+
+      const conditionsUpperCase = words.map((word) => { 
+        return word[0].toUpperCase() + word.substring(1); 
+      }).join(" ");
+
+      setAirTempCelsius(airTempC);
+      setAirTempFahrenheit(airTempF);
+
+      setWindSpeedKPH(windSpeedK);
+      setWindSpeedMPH(windSpeedM);
+      setWindDirection(windDir);
+
+      setCurrentWeatherConditions(conditionsUpperCase);
+    });
   };
 
   function setWaveHeight() {
@@ -172,16 +201,18 @@ function ForecastInfo( {...props} ) {
                 <h2 className='swellWindTitle'>SWELL AND WIND</h2>
                 <h2 className='swellTitle'>Primary Swell</h2>
                 <h2 className='swellWindDetails'>Wave Height (FT.): {swellWaveHeightsMaxFeet} ft. at {wavePeriodSeconds} seconds {waveDirectionCompass} @ {waveDirectionDegrees}°</h2>
-                <h2 className='swellWindDetails'>Wave Height (M): {swellWaveHeightsMaxMeters} m. at 9 seconds ENE @ 50°</h2>
+                <h2 className='swellWindDetails'>Wave Height (M): {swellWaveHeightsMaxMeters} m. at {wavePeriodSeconds}  seconds {waveDirectionCompass} @ {waveDirectionDegrees}°</h2>
                 <h2 className='swellTitle'>Wind Swell</h2>
                 <h2 className='swellWindDetails'>Wave Height (FT.): {windWaveHeightsMaxFeet} ft. at {wavePeriodSeconds} seconds {waveDirectionCompass} @ {waveDirectionDegrees}°</h2>
-                <h2 className='swellWindDetails'>Wave Height (M): {windWaveHeightsMaxMeters} m. at 9 seconds ENE @ 50°</h2>
+                <h2 className='swellWindDetails'>Wave Height (M): {windWaveHeightsMaxMeters} m. at {wavePeriodSeconds}  seconds {waveDirectionCompass} @ {waveDirectionDegrees}°</h2>
                 <h2 className='windTitle'>Wind Direction</h2>
-                <h2 className='swellWindDetails'>Wind Speed (MPH): 17.9 mph. ESE @ 110°</h2>
-                <h2 className='swellWindDetails'>Wind Speed (KPH): 28.8 kph. ESE @ 110°</h2>
+                <h2 className='swellWindDetails'>Wind Speed (MPH): {windSpeedMPH} mph. ESE @ {windDirection}°</h2>
+                <h2 className='swellWindDetails'>Wind Speed (KPH): {windSpeedKPH} kph. ESE @ {windDirection}°</h2>
             </div>
             <div className='weatherConditionsBlock'>
               <h2 className='conditionsTitle'>WEATHER CONDITIONS</h2>
+              <h2 className='airTemp'>Current Conditions</h2>
+              <h2 className='ConditionsDetails'>{currentWeatherConditions}</h2>
               <h2 className='airTemp'>Air Temperature</h2>
               <h2 className='ConditionsDetails'>Fahrenheit: 89°F</h2>
               <h2 className='ConditionsDetails'>Celsius: 26°C</h2>
