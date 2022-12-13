@@ -416,6 +416,7 @@ function ForecastInfo( {...props} ) {
 
   function WaveHeight() {
     // Set Predicted Wave Height to wind, or swell depending on if swell direction is correct
+    var windSwell = false;
     if (waveDirectionDegrees > 260 && waveDirectionDegrees < 360 && props.forecastLocation === "Pipeline") {
       setWaveHeightsMinFeetRounded(Math.round(swellWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(swellWaveHeightsMaxFeet));
@@ -423,8 +424,19 @@ function ForecastInfo( {...props} ) {
     if (waveDirectionDegrees < 260 && waveDirectionDegrees > 0 && props.forecastLocation === "Pipeline") {
       setWaveHeightsMinFeetRounded(Math.round(windWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(windWaveHeightsMaxFeet));
+      windSwell = true;
     }
-    else {
+    if (waveDirectionDegrees > 270 || waveDirectionDegrees < 90 && props.forecastLocation === "Waikiki") {
+      setWaveHeightsMinFeetRounded(Math.round(windWaveHeightsMinFeet));
+      setWaveHeightsMaxFeetRounded(Math.round(windWaveHeightsMaxFeet));
+      windSwell = true;
+    }
+    if (waveDirectionDegrees < 315 && waveDirectionDegrees > 45 && props.forecastLocation === "Honolua") {
+      setWaveHeightsMinFeetRounded(Math.round(windWaveHeightsMinFeet));
+      setWaveHeightsMaxFeetRounded(Math.round(windWaveHeightsMaxFeet));
+      windSwell = true;
+    }
+    else if (windSwell === false) {
       setWaveHeightsMinFeetRounded(Math.round(swellWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(swellWaveHeightsMaxFeet));
     }
