@@ -479,7 +479,9 @@ function ForecastInfo( {...props} ) {
     const waveHeightFeet = waveHeightsMaxFeetRounded;
     if (waveHeightFeet < 1) {
        setWaveQuality("Flat");
-    }
+    }if (waveHeightFeet > 1) {
+      setWaveQuality("Fair");
+   }
     // If 15mph+ winds and onshore - than
     if (windSpeedMPH > 15 && (windDirection > 45 || windDirection < 225)) {
       setWaveQuality("Poor");

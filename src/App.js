@@ -5,13 +5,17 @@ import HomeScreen from './HomeScreen';
 import Forecasts from './Forecasts';
 import ForecastInfo from './ForecastInfo';
 import Login from './Login';
+import Favorites from './Favorites';
 import useLocalStorage from "./useLocalStorage";
+import SignUp from './SignUp';
 
 function App() {
     const [home, setHome] = useState(true);
     const [forecasts, setForecasts] = useState(false);
     const [forecastInfo, setForecastInfo] = useState(false);
     const [login, setLogin] = useState(false);
+    const [signUp, setSignUp] = useState(false);
+    const [favorites, setFavorites] = useState(false);
 
     const [name, setName] = useLocalStorage();
 
@@ -42,6 +46,7 @@ function App() {
         login, 
         setLogin,
         name,
+        setName,
         forecastLocation,
         setForecastLocation,
         forecastLatitude,
@@ -59,7 +64,11 @@ function App() {
         haleiwaLat,
         haleiwaLong,
         honoluaLat,
-        honoluaLong
+        honoluaLong,
+        favorites,
+        setFavorites,
+        signUp,
+        setSignUp
     }
 
     return (
@@ -68,6 +77,8 @@ function App() {
         {forecasts ? <Forecasts {...props}/> : <></>}
         {forecastInfo ? <ForecastInfo {...props}/> : <></>}
         {login ? <Login {...props} onNameSubmit={setName}/> : <></>}
+        {signUp ? <SignUp {...props}/> : <></>}
+        {favorites ? <Favorites {...props}/> : <></>}
     </>
     );
 }

@@ -9,7 +9,7 @@ import swell from './static/swell.jpg';
 import travel from './static/travel.jpg';
 import surfboards from './static/surfboards.jpg';
 
-function HomeScreen( {...props} ) {
+function Favorites( {...props} ) {
 
   const [carouselTitle, setCarouselTitle] = useState("Pipeline")
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -65,26 +65,6 @@ function HomeScreen( {...props} ) {
     props.setLogin(true);
   }
 
-  function showSignUp() {
-    //props.setHome(false);
-    props.setLogin(true);
-  }
-
-  function showFavorites() {
-    if (props.name !== null) {
-      props.setHome(false);
-      props.setFavorites(true);
-    }
-    else {
-      props.setHome(false);
-      props.setLogin(true);
-    }
-  }
-
-  function logout() {
-    props.setName(null);
-  }
-
   function refresh() {
     window.location.reload(true);
   }
@@ -96,37 +76,11 @@ function HomeScreen( {...props} ) {
         <h1 onClick={refresh} className='navHome'>Hawai'i Surf</h1>
         <div className='navbarRight'>
           <h1 onClick={showForecasts} className='navbarItem'>Forecasts</h1>
-          <h1 onClick={showFavorites} className='navbarItem'>Favorites</h1>
-          {props.name === null ? <h1 onClick={showLogin} className='navbarItem'>Login</h1> : <h1 onClick={logout} className='navbarItem'>Logout</h1>}
-          {props.name === null ? <h1 onClick={showSignUp} className='navbarItem'>Sign Up</h1> : <></>}
+          <h1 className='navbarItem'>Favorites</h1>
+          <h1 onClick={showLogin} className='navbarItem'>Login</h1>
         </div>
       </div>
-      <div className='carouselBlock'>
-        <div className="carousel" data-carousel>
-            <button onClick={updateIndex} className="prev" data-carousel-button="prev">&#8249;</button>
-            <button onClick={updateIndex} className="next" data-carousel-button="next">&#8250;</button>
-            <ul data-slides>
-                <li className="slide" data-active><img src={img1} className="home-image" alt="Pipeline"/></li>
-                <li className="slide"><img src={img2} className="home-image" alt="Jaws"/></li>
-                <li className="slide"><img src={img3} className="home-image" alt="Waikiki"/></li>
-            </ul>
-          <div class="imgTitle">{carouselTitle}</div>
-        </div>
-      </div>
-      <div className='homeCategories'>
-        <div className='catObject'>
-          <h2 className='catTitle'>SWELL</h2>
-          <img onClick={showForecasts} src={swell} className='catImg' alt="Swell"/>
-        </div>
-        <div className='catObject'>
-          <h2 className='catTitle'>TRAVEL</h2>
-          <img src={travel} className='catImg' alt="Travel"/>
-        </div>
-        <div className='catObject'>
-          <h2 className='catTitle'>EQUIPMENT</h2>
-          <img src={surfboards} className='catImg' alt="Swell"/>
-        </div>
-      </div>
+      <h1 className='favoritesTitle'>{props.name}'s Favorites</h1>
       <div className='footer'>
         <h2 className='footerItem'>Hawai'i Surf</h2>
       </div>
@@ -135,4 +89,4 @@ function HomeScreen( {...props} ) {
   );
 }
 
-export default HomeScreen;
+export default Favorites;
