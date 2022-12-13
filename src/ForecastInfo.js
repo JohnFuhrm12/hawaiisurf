@@ -65,6 +65,9 @@ function ForecastInfo( {...props} ) {
   // Raw Forecast Data
   const [forecastDates, setForecastDates] = useState([]);
   const [waveheights, setWaveHeights] = useState([]);
+  const [windWaveHeights, setWindWaveHeights] = useState([]);
+
+  const [windWaveChart, setWindWaveChart] = useState(false);
 
   // 8-Day Forecast Data - Wave Height For Chart
   const [chartdataloaded, setChartdataloaded] = useState(false);
@@ -101,6 +104,10 @@ function ForecastInfo( {...props} ) {
     getData();
     setChartdataloaded(true);
   }, [])
+
+  useEffect(() => {
+    loadWindWaveData();
+  }, [windWaveChart])
 
   useEffect(() => {
     WaveHeight();
@@ -141,8 +148,11 @@ function ForecastInfo( {...props} ) {
           var revealtop = chart[i].getBoundingClientRect().top;
           var revealpoint = 10;
 
-          if (revealtop < windowheight - revealpoint) {
+          if (revealtop < windowheight - revealpoint && windWaveChart === false) {
             loadData();
+          }
+          if (revealtop < windowheight - revealpoint && windWaveChart) {
+            loadWindWaveData();
           }
       }
   }
@@ -158,15 +168,29 @@ function ForecastInfo( {...props} ) {
     });
   }
 
+  function loadWindWaveData() {
+    setForecastData({ 
+      labels: forecastDates,
+      datasets: [{
+        label: "Weekly Forecast",
+        data: windWaveHeights,
+        backgroundColor: ["rgba(19, 79, 171)"]
+      }]
+    });
+  }
+
   // Call Open-Meteo API
   const getData = () => {
     // Fetch Weekly Swell Information (Open-Meteo API)
-    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=${props.forecastLatitude}&longitude=${props.forecastLongitude}&hourly=wave_height`).then((res) => {
+    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=${props.forecastLatitude}&longitude=${props.forecastLongitude}&hourly=wave_height,wind_wave_height`).then((res) => {
       const dates = [];
       const waves = [];
+      const windWaves = [];
 
       const resDates = res.data.hourly.time;
       const resWaves = res.data.hourly.wave_height;
+      const resWindWaves = res.data.hourly.wind_wave_height;
+
       dates.push(resDates[0]);
       dates.push(resDates[24]);
       dates.push(resDates[48]);
@@ -185,8 +209,18 @@ function ForecastInfo( {...props} ) {
       waves.push((resWaves[144] * 3.28084).toFixed(2));
       waves.push((resWaves[167] * 3.28084).toFixed(2));
 
+      windWaves.push((resWindWaves[0] * 3.28084).toFixed(2));
+      windWaves.push((resWaves[24] * 3.28084).toFixed(2));
+      windWaves.push((resWaves[48] * 3.28084).toFixed(2));
+      windWaves.push((resWaves[72] * 3.28084).toFixed(2));
+      windWaves.push((resWaves[96] * 3.28084).toFixed(2));
+      windWaves.push((resWaves[120] * 3.28084).toFixed(2));
+      windWaves.push((resWaves[144] * 3.28084).toFixed(2));
+      windWaves.push((resWaves[167] * 3.28084).toFixed(2));
+
       setForecastDates(dates);
       setWaveHeights(waves);
+      setWindWaveHeights(windWaves);
 
       setForecastData({ 
         labels: forecastDates,
@@ -416,7 +450,6 @@ function ForecastInfo( {...props} ) {
 
   function WaveHeight() {
     // Set Predicted Wave Height to wind, or swell depending on if swell direction is correct
-    var windSwell = false;
     if (waveDirectionDegrees > 260 && waveDirectionDegrees < 360 && props.forecastLocation === "Pipeline") {
       setWaveHeightsMinFeetRounded(Math.round(swellWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(swellWaveHeightsMaxFeet));
@@ -424,19 +457,19 @@ function ForecastInfo( {...props} ) {
     if (waveDirectionDegrees < 260 && waveDirectionDegrees > 0 && props.forecastLocation === "Pipeline") {
       setWaveHeightsMinFeetRounded(Math.round(windWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(windWaveHeightsMaxFeet));
-      windSwell = true;
+      setWindWaveChart(true);
     }
     if (waveDirectionDegrees > 270 || waveDirectionDegrees < 90 && props.forecastLocation === "Waikiki") {
       setWaveHeightsMinFeetRounded(Math.round(windWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(windWaveHeightsMaxFeet));
-      windSwell = true;
+      setWindWaveChart(true);
     }
     if (waveDirectionDegrees < 315 && waveDirectionDegrees > 45 && props.forecastLocation === "Honolua") {
       setWaveHeightsMinFeetRounded(Math.round(windWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(windWaveHeightsMaxFeet));
-      windSwell = true;
+      setWindWaveChart(true);
     }
-    else if (windSwell === false) {
+    else if (windWaveChart === false) {
       setWaveHeightsMinFeetRounded(Math.round(swellWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(swellWaveHeightsMaxFeet));
     }
