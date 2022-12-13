@@ -12,18 +12,21 @@ import img6 from './static/honoluaF.jpg';
 function Forecasts( {...props} ) {
 
   function showHome() {
-    props.setHome(true)
-    props.setForecasts(false)
-  }
-
-  function showForecastInfo() {
-    props.setForecastInfo(true)
-    props.setForecasts(false)
+    props.setHome(true);
+    props.setForecasts(false);
   }
 
   function showLogin() {
     props.setForecasts(false);
     props.setLogin(true);
+  }
+
+  function showForecastInfo(e) {
+    props.setForecastInfo(true);
+    props.setForecasts(false);
+    props.setForecastLatitude(e.currentTarget.name);
+    props.setForecastLongitude(e.currentTarget.title);
+    props.setForecastLocation(e.currentTarget.alt);
   }
 
   return (
@@ -44,29 +47,29 @@ function Forecasts( {...props} ) {
         <div className='forecastRow'>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Pipeline</h2>
-                <img onClick={showForecastInfo} className='forecastIMG' src={img1} alt='Pipeline'/>
+                <img onClick={showForecastInfo} className='forecastIMG' src={img1} name={props.pipelineLat} title={props.pipelineLong} alt='Pipeline'/>
             </div>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Jaws</h2>
-                <img onClick={showForecastInfo} className='forecastIMG' src={img2} alt='Jaws'/>
+                <img onClick={showForecastInfo} className='forecastIMG' src={img2} name={props.jawsLat} title={props.jawsLong} alt='Jaws'/>
             </div>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Waikiki</h2>
-                <img className='forecastIMG' src={img3} alt='Waikiki'/>
+                <img onClick={showForecastInfo} className='forecastIMG' src={img3} name={props.waikikiLat} title={props.waikikiLong} alt='Waikiki'/>
             </div>
         </div>
         <div className='forecastRow'>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Waimea Bay</h2>
-                <img className='forecastIMG' src={img4} alt='Pipeline'/>
+                <img onClick={showForecastInfo} className='forecastIMG' src={img4} name={props.waimeaLat} title={props.waimeaLong} alt='Waimea'/>
             </div>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Haleiwa</h2>
-                <img className='forecastIMG' src={img5} alt='Jaws'/>
+                <img onClick={showForecastInfo} className='forecastIMG' src={img5} name={props.haleiwaLat} title={props.haleiwaLong} alt='Haleiwa'/>
             </div>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Honolua Bay</h2>
-                <img className='forecastIMG' src={img6} alt='Waikiki'/>
+                <img onClick={showForecastInfo} className='forecastIMG' src={img6} name={props.honoluaLat} title={props.honoluaLong} alt='Honolua'/>
             </div>
         </div>
       </div>

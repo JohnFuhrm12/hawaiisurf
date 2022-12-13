@@ -2,7 +2,12 @@ import './App.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import img1 from './static/pipeF.jpg';
+import pipelineIMG from './static/pipeF.jpg';
+import jawsIMG from './static/jawsF.jpg';
+import waikikiIMG from './static/waikikiF.jpg';
+import waimeaIMG from './static/waimeaF.jpg';
+import haleiwaIMG from './static/haleiwaF.jpg';
+import honoluaIMG from './static/honoluaF.jpg';
 
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS } from 'chart.js/auto';
@@ -77,6 +82,17 @@ function ForecastInfo( {...props} ) {
   var month = 0;
   var year = 0;
 
+  // Forecast Information for Each Site
+  const pipelineDesc = "The Banzai Pipeline is a reef break located in Hawaii, off Ehukai Beach Park in Pupukea on O'ahu's North Shore. Pipeline is known for huge waves that break in shallow water just above a sharp and cavernous reef, forming large, hollow, thick curls of water that surfers can tube ride. There are three reefs at Pipeline in progressively deeper water that activate according to the increasing size of swell.";
+  const jawsDesc = "Pe’ahi is Maui’s biggest surfing break, and the yearly Big Wave Awards have listed Jaws as the winning break more than any other place. When Jaws is going off, the top names in surfing flock here, and mere mortals follow to watch in awe. “Jaws” is certainly the most well known name for the surf break. The name “Pe’ahi” has also become more popular with surfers as of late.";
+  const waikikiDesc = "Waikiki Beach consists of numerous spots that offer rights and lefts, as well as world-renowned crowds. It is one of the birthplaces of recreational surfing and a pillar in the quintessential Hawaiian surfing experience. Surf Waikiki and you'll share waves with people from all over the world, many just learning how to surf.";
+  const waimeaDesc = "Waimea Bay is a legendary surf spot located on the North Shore of Oahu. A hectic and dangerous place during winter, and a quiet portrait of the Hawaiian ocean life during summer. Welcome to a surf break known for its mammoth waves and death-defying rides.";
+  const haleiwaDesc = "Haleiwa is located at the western end of the Seven-Mile Miracle, in the North Shore of Oahu, Hawaii. Its tricky reef usually works best during the winter season, with mid-period Northwest swells coming far away from the Pacific Ocean. Haleiwa is known for the hollow rights, rippable sections, and powerful closeouts.";
+  const honoluaDesc = "Honolua Bay is not only the best wave in Maui, it is one of the best in the world.Honolua Bay has just that magical angle, producing a perfect righthander that can line up flawlessly in a series of barrel and turn sections for the better part of a quarter-mile.";
+
+  const [forecastDescription, setForecastDescription] = useState(pipelineDesc);
+  const [forecastIMG, setForecastIMG] = useState(pipelineIMG);
+
   useEffect(() => {
     var today = new Date();
     day = String(today.getDate()).padStart(2, '0');
@@ -89,6 +105,30 @@ function ForecastInfo( {...props} ) {
   useEffect(() => {
     WaveHeight();
     WaveQuality();
+    if (props.forecastLocation === "Pipeline") {
+      setForecastDescription(pipelineDesc);
+      setForecastIMG(pipelineIMG);
+    }
+    if (props.forecastLocation === "Jaws") {
+      setForecastDescription(jawsDesc);
+      setForecastIMG(jawsIMG);
+    }
+    if (props.forecastLocation === "Waikiki") {
+      setForecastDescription(waikikiDesc);
+      setForecastIMG(waikikiIMG);
+    }
+    if (props.forecastLocation === "Waimea") {
+      setForecastDescription(waimeaDesc);
+      setForecastIMG(waimeaIMG);
+    }
+    if (props.forecastLocation === "Haleiwa") {
+      setForecastDescription(haleiwaDesc);
+      setForecastIMG(haleiwaIMG);
+    }
+    if (props.forecastLocation === "Honolua") {
+      setForecastDescription(honoluaDesc);
+      setForecastIMG(honoluaIMG);
+    }
   })
 
   window.addEventListener('scroll', loadChart);
@@ -121,7 +161,7 @@ function ForecastInfo( {...props} ) {
   // Call Open-Meteo API
   const getData = () => {
     // Fetch Weekly Swell Information (Open-Meteo API)
-    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_height`).then((res) => {
+    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=${props.forecastLatitude}&longitude=${props.forecastLongitude}&hourly=wave_height`).then((res) => {
       const dates = [];
       const waves = [];
 
@@ -158,7 +198,7 @@ function ForecastInfo( {...props} ) {
       });
     });
     // Fetch Today's Swell Information (Open-Meteo API)
-    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,wind_wave_direction,wind_wave_period,wave_period,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
+    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=${props.forecastLatitude}&longitude=${props.forecastLongitude}&hourly=wave_direction,wind_wave_height,wind_wave_direction,wind_wave_period,wave_period,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
         const swellWaveHeights = res.data.hourly.swell_wave_height;
         const windWaveHeights = res.data.hourly.wind_wave_height;
         const waveDirection = res.data.hourly.wave_direction[0];
@@ -300,7 +340,7 @@ function ForecastInfo( {...props} ) {
         }
     });
     // Fetch Today's Weather Information (OpenWeather API)
-    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=21.67&lon=-158.05&appid=73a95bf4ecd5b065a38ec246784e64ee`).then((res) => {
+    axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${props.forecastLatitude}&lon=${props.forecastLongitude}&appid=73a95bf4ecd5b065a38ec246784e64ee`).then((res) => {
       const airTempC = ((res.data.main.temp) - (273.15)).toFixed(2);
       const airTempF = ((airTempC * 1.8) + (32)).toFixed(2);
       const windSpeedK = (res.data.wind.speed * 3.6).toFixed(2);
@@ -376,13 +416,17 @@ function ForecastInfo( {...props} ) {
 
   function WaveHeight() {
     // Set Predicted Wave Height to wind, or swell depending on if swell direction is correct
-    if (waveDirectionDegrees > 260 && waveDirectionDegrees < 360) {
+    if (waveDirectionDegrees > 260 && waveDirectionDegrees < 360 && props.forecastLocation === "Pipeline") {
       setWaveHeightsMinFeetRounded(Math.round(swellWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(swellWaveHeightsMaxFeet));
     }
-    else {
+    if (waveDirectionDegrees < 260 && waveDirectionDegrees > 0 && props.forecastLocation === "Pipeline") {
       setWaveHeightsMinFeetRounded(Math.round(windWaveHeightsMinFeet));
       setWaveHeightsMaxFeetRounded(Math.round(windWaveHeightsMaxFeet));
+    }
+    else {
+      setWaveHeightsMinFeetRounded(Math.round(swellWaveHeightsMinFeet));
+      setWaveHeightsMaxFeetRounded(Math.round(swellWaveHeightsMaxFeet));
     }
   }
 
@@ -458,8 +502,8 @@ function ForecastInfo( {...props} ) {
       <div className='forecastInfoVerticalWrapper'>
         <div className='forecastInfoWrapper'>
             <div className='forecastTitleBlock'>
-                <h1 className='forecastInfoTitle'>CURRENT CONDITIONS: PIPELINE</h1>
-                <img className='forecastInfoIMG' src={img1} alt='Pipeline'/>
+                <h1 className='forecastInfoTitle'>CURRENT CONDITIONS: {props.forecastLocation.toUpperCase()}</h1>
+                <img className='forecastInfoIMG' src={forecastIMG} alt='Pipeline'/>
             </div>
             <div className='mainForecastBlock'>
                 <h2 className='heightTitle'>Surf Height</h2>
@@ -467,7 +511,7 @@ function ForecastInfo( {...props} ) {
                     <h2 className='surfHeight'>{waveHeightsMinFeetRounded}-{waveHeightsMaxFeetRounded} ft. - {waveQuality}</h2>
                 </div>
                 <div className='forecastTextWrapper'>
-                <p className='forecastText'>The Banzai Pipeline is a reef break located in Hawaii, off Ehukai Beach Park in Pupukea on O'ahu's North Shore. Pipeline is known for huge waves that break in shallow water just above a sharp and cavernous reef, forming large, hollow, thick curls of water that surfers can tube ride. There are three reefs at Pipeline in progressively deeper water that activate according to the increasing size of swell.</p>
+                <p className='forecastText'>{forecastDescription}</p>
                 </div>
             </div>
         </div>
