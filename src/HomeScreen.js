@@ -56,20 +56,28 @@ function HomeScreen( {...props} ) {
   }, [indexUpdate]);
 
   function showForecasts() {
-    props.setHome(false)
-    props.setForecasts(true)
+    props.setHome(false);
+    props.setForecasts(true);
+  }
+
+  function showLogin() {
+    props.setHome(false);
+    props.setLogin(true);
+  }
+
+  function refresh() {
+    window.location.reload(true);
   }
 
   return (
     <>
     <div className='page'>
       <div className='navbar'>
-        <h1 className='navHome'>Hawai'i Surf</h1>
+        <h1 onClick={refresh} className='navHome'>Hawai'i Surf</h1>
         <div className='navbarRight'>
           <h1 onClick={showForecasts} className='navbarItem'>Forecasts</h1>
           <h1 className='navbarItem'>Favorites</h1>
-          <h1 className='navbarItem'>Login</h1>
-          <h1 className='navbarItem'>Sign Up</h1>
+          <h1 onClick={showLogin} className='navbarItem'>Login</h1>
         </div>
       </div>
       <div className='carouselBlock'>

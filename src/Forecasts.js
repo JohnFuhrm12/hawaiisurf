@@ -21,8 +21,9 @@ function Forecasts( {...props} ) {
     props.setForecasts(false)
   }
 
-  function showForecasts() {
-    console.log("FORECASTS")
+  function showLogin() {
+    props.setForecasts(false);
+    props.setLogin(true);
   }
 
   return (
@@ -31,10 +32,9 @@ function Forecasts( {...props} ) {
       <div className='navbar'>
         <h1 onClick={showHome} className='navHome'>Hawai'i Surf</h1>
         <div className='navbarRight'>
-          <h1 onClick={showForecasts} className='navbarItem'>Forecasts</h1>
+          <h1 className='navbarItem'>Forecasts</h1>
           <h1 className='navbarItem'>Favorites</h1>
-          <h1 className='navbarItem'>Login</h1>
-          <h1 className='navbarItem'>Sign Up</h1>
+          <h1 onClick={showLogin} className='navbarItem'>Login</h1>
         </div>
       </div>
       <div className='forecastsMainTitleBlock'>
@@ -48,7 +48,7 @@ function Forecasts( {...props} ) {
             </div>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Jaws</h2>
-                <img className='forecastIMG' src={img2} alt='Jaws'/>
+                <img onClick={showForecastInfo} className='forecastIMG' src={img2} alt='Jaws'/>
             </div>
             <div className='forecastItem'>
                 <h2 className='forecastTitle'>Waikiki</h2>

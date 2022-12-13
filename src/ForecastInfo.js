@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 
 import img1 from './static/pipeF.jpg';
 
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS } from 'chart.js/auto';
+
 function ForecastInfo( {...props} ) {
   // Open Ocean Swell Min, Avg, and Max wave heights in feet and meters
   const [swellWaveHeightsMinMeters, setSwellWaveHeightsMinMeters] = useState(0);
@@ -54,6 +57,21 @@ function ForecastInfo( {...props} ) {
   const [waveQuality, setWaveQuality] = useState("Fair");
   const [bubbleColor, setBubbleColor] = useState("lime");
 
+  // Raw Forecast Data
+  const [forecastDates, setForecastDates] = useState([]);
+  const [waveheights, setWaveHeights] = useState([]);
+
+  // 8-Day Forecast Data - Wave Height For Chart
+  const [chartdataloaded, setChartdataloaded] = useState(false);
+  const [forecastData, setForecastData] = useState({ 
+    labels: forecastDates,
+    datasets: [{
+      label: "Weekly Forecast",
+      data: waveheights,
+      backgroundColor: ["rgba(19, 79, 171)"]
+    }]
+  });
+
   // Current Date
   var day = 0;
   var month = 0;
@@ -65,6 +83,7 @@ function ForecastInfo( {...props} ) {
     month = String(today.getMonth() + 1).padStart(2, '0'); 
     year = today.getFullYear();
     getData();
+    setChartdataloaded(true);
   }, [])
 
   useEffect(() => {
@@ -72,11 +91,71 @@ function ForecastInfo( {...props} ) {
     WaveQuality();
   })
 
+  window.addEventListener('scroll', loadChart);
+
+  function loadChart() {
+      var chart = document.querySelectorAll('.forecastChart')
+
+      for (var i = 0; i < chart.length; i++) {
+          var windowheight = window.innerHeight;
+          var revealtop = chart[i].getBoundingClientRect().top;
+          var revealpoint = 10;
+
+          if (revealtop < windowheight - revealpoint) {
+            loadData();
+          }
+      }
+  }
+
+  function loadData() {
+    setForecastData({ 
+      labels: forecastDates,
+      datasets: [{
+        label: "Weekly Forecast",
+        data: waveheights,
+        backgroundColor: ["rgba(19, 79, 171)"]
+      }]
+    });
+  }
+
   // Call Open-Meteo API
   const getData = () => {
     // Fetch Weekly Swell Information (Open-Meteo API)
-    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,wave_period,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => {
-      console.log(res.data);
+    axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_height`).then((res) => {
+      const dates = [];
+      const waves = [];
+
+      const resDates = res.data.hourly.time;
+      const resWaves = res.data.hourly.wave_height;
+      dates.push(resDates[0]);
+      dates.push(resDates[24]);
+      dates.push(resDates[48]);
+      dates.push(resDates[72]);
+      dates.push(resDates[96]);
+      dates.push(resDates[120]);
+      dates.push(resDates[144]);
+      dates.push(resDates[167]);
+
+      waves.push((resWaves[0] * 3.28084).toFixed(2));
+      waves.push((resWaves[24] * 3.28084).toFixed(2));
+      waves.push((resWaves[48] * 3.28084).toFixed(2));
+      waves.push((resWaves[72] * 3.28084).toFixed(2));
+      waves.push((resWaves[96] * 3.28084).toFixed(2));
+      waves.push((resWaves[120] * 3.28084).toFixed(2));
+      waves.push((resWaves[144] * 3.28084).toFixed(2));
+      waves.push((resWaves[167] * 3.28084).toFixed(2));
+
+      setForecastDates(dates);
+      setWaveHeights(waves);
+
+      setForecastData({ 
+        labels: forecastDates,
+        datasets: [{
+          label: "Weekly Forecast",
+          data: waveheights,
+          backgroundColor: ["rgba(19, 79, 171)"]
+        }]
+      });
     });
     // Fetch Today's Swell Information (Open-Meteo API)
     axios.get(`https://marine-api.open-meteo.com/v1/marine?latitude=21.67&longitude=-158.05&hourly=wave_direction,wind_wave_height,wind_wave_direction,wind_wave_period,wave_period,swell_wave_height&start_date=${year}-${month}-${day}&end_date=${year}-${month}-${day}`).then((res) => { // Pipeline TODAY ONLY
@@ -317,19 +396,19 @@ function ForecastInfo( {...props} ) {
       setWaveQuality("Poor");
     }
     // If less than 20mph winds and waveheight over 2ft and offshore - than
-    if (windSpeedMPH < 20 && waveHeightFeet > 2 && (windDirection < 45 || windDirection > 225)) {
+    if (windSpeedMPH < 20 && waveHeightFeet > 2 && (windDirection > 0 && windDirection < 180)) {
       setWaveQuality("Fair");
     }
      // If less than 5mph winds and waveheight over 2ft and onshore - than
-     if (windSpeedMPH < 5 && waveHeightFeet > 2 && (windDirection > 45 || windDirection < 225)) {
+     if (windSpeedMPH < 5 && waveHeightFeet > 2 && (windDirection > 180 && windDirection < 360)) {
       setWaveQuality("Fair");
     }
      // If less than 10mph winds and waveheight over 4ft and offshore - than
-     if (windSpeedMPH < 10 && waveHeightFeet > 4 && (windDirection < 45 || windDirection > 225)) {
+     if (windSpeedMPH < 10 && waveHeightFeet > 4 && (windDirection > 0 && windDirection < 180)) {
       setWaveQuality("Great");
     }
     // If less than 10mph winds and waveheight over 6ft and offshore - than
-    if (windSpeedMPH < 10 && waveHeightFeet > 6 && (windDirection < 45 || windDirection > 225)) {
+    if (windSpeedMPH < 10 && waveHeightFeet > 6 && (windDirection > 180 && windDirection < 360)) {
       setWaveQuality("Firing");
     }
 
@@ -342,7 +421,7 @@ function ForecastInfo( {...props} ) {
     if (waveQuality === "Fair") {
       setBubbleColor("lime");
     }
-    if (waveQuality === "Good") {
+    if (waveQuality === "Great") {
       setBubbleColor("orange");
     }
     if (waveQuality === "Firing") {
@@ -351,13 +430,18 @@ function ForecastInfo( {...props} ) {
   }
 
   function showHome() {
-    props.setHome(true)
-    props.setForecastInfo(false)
+    props.setHome(true);
+    props.setForecastInfo(false);
   }
 
   function showForecasts() {
-    props.setForecasts(true)
-    props.setForecastInfo(false)
+    props.setForecasts(true);
+    props.setForecastInfo(false);
+  }
+
+  function showLogin() {
+    props.setForecastInfo(false);
+    props.setLogin(true);
   }
 
   return (
@@ -368,8 +452,7 @@ function ForecastInfo( {...props} ) {
         <div className='navbarRight'>
           <h1 onClick={showForecasts} className='navbarItem'>Forecasts</h1>
           <h1 className='navbarItem'>Favorites</h1>
-          <h1 className='navbarItem'>Login</h1>
-          <h1 className='navbarItem'>Sign Up</h1>
+          <h1 onClick={showLogin} className='navbarItem'>Login</h1>
         </div>
       </div>
       <div className='forecastInfoVerticalWrapper'>
@@ -410,6 +493,9 @@ function ForecastInfo( {...props} ) {
               <h2 className='ConditionsDetails'>Celsius: {airTempCelsius}°C</h2>
             </div>
         </div>
+      </div>
+      <div className='forecastChart'>
+        {chartdataloaded ? <Bar data={forecastData}/> : <></>}
       </div>
       <div className='footer'>
         <h2 className='footerItem'>Hawai'i Surf</h2>
