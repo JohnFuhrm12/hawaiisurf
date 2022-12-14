@@ -1,5 +1,24 @@
 import React, {useRef} from "react";
 
+// Firebase imports
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import 'firebase/compat/auth';
+import { collection, getDocs, query, where, orderBy } from "firebase/firestore";
+
+// Initialize Firebase Database
+firebase.initializeApp({
+    apiKey: "AIzaSyAzmdsZQLIhq6lZb1bGQRusNHWYEwF4Ny8",
+    authDomain: "hawaiisurf-b817d.firebaseapp.com",
+    projectId: "hawaiisurf-b817d",
+    storageBucket: "hawaiisurf-b817d.appspot.com",
+    messagingSenderId: "587941794922",
+    appId: "1:587941794922:web:2bf14e8ea71b007df7e613"
+})
+
+// Firebase Database
+const db = firebase.firestore();
+
 // Reload window when logging in to fix 2x button press bug
 export default function SignUp( {...props} ) {
     const nameRef = useRef();
