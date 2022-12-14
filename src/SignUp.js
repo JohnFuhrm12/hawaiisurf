@@ -30,12 +30,13 @@ export default function SignUp( {...props} ) {
         </div>
       </div>
         <div className="loginHeader">
-          <h1 className="loginHeaderText">Login to Hawai'i Surf</h1>
+          <h1 className="loginHeaderText">Create Your Hawai'i Surf Account</h1>
         </div>
         <div class="loginContainer">
           <form className="loginForm" onSubmit={handleSubmit}>
             <input className="loginInput" type="text" ref={nameRef} placeholder='Username' required></input>
-            <button className="loginButton" type="submit">Login</button>
+            <input className="loginInputPassword" type="text" ref={nameRef} placeholder='Password' required></input>
+            <button className="loginButton" type="submit">Sign Up</button>
           </form>
         </div>
       </div>

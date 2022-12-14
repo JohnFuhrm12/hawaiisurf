@@ -358,6 +358,22 @@ html, body {
   font-size: 20px;
 }
 
+.loginInputPassword {
+  height: 40px;
+  border: solid 3px black;
+  border-radius: 20px;
+  box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.34);
+  margin-inline: 20%;
+  padding: 5px;
+  padding-left: 10px;
+  font-size: 20px;
+  margin-top: 30px;
+}
+
+.loginInputPassword::placeholder {
+  font-size: 20px;
+}
+
 .loginButton {
   height: 50px;
   margin-top: 6%;

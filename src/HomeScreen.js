@@ -66,8 +66,8 @@ function HomeScreen( {...props} ) {
   }
 
   function showSignUp() {
-    //props.setHome(false);
-    props.setLogin(true);
+    props.setHome(false);
+    props.setSignUp(true);
   }
 
   function showFavorites() {
