@@ -36,6 +36,7 @@ export default function Login( {onNameSubmit, ...props} ) {
         <div class="loginContainer">
           <form className="loginForm" onSubmit={handleSubmit}>
             <input className="loginInput" type="text" ref={nameRef} placeholder='Username' required></input>
+            <input className="loginInputPassword" type="text" placeholder='Password' required></input>
             <button className="loginButton" type="submit">Login</button>
           </form>
         </div>
