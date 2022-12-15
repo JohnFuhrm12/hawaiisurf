@@ -110,6 +110,10 @@ function Favorites( {...props} ) {
     props.setForecastLocation(e.currentTarget.alt);
   }
 
+  const remove = async (e) => {
+    deleteDoc(doc(db, 'favorites', props.name + e.currentTarget.getAttribute("data-name")));
+  };
+
   return (
     <>
     <div className='page'>
@@ -128,7 +132,10 @@ function Favorites( {...props} ) {
             <>
             <div className='forecastRow'>
             <div className='forecastItem'>
-                  <h2 className='forecastTitle'>{favorite.locationName}</h2>
+            <div className='forecastTitleAddBlock'>
+              <h2 className='forecastTitle'>{favorite.locationName}</h2>
+              <h2 onClick={remove} className='addFavorites' data-name={favorite.locationName}>-</h2>
+            </div>
                 <img onClick={showForecastInfo} className='forecastIMG' src={favorite.locationIMG} name={favorite.locationLat} title={favorite.locationLong} alt={favorite.locationName}/>
             </div>
             </div>
