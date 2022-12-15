@@ -403,3 +403,24 @@ html, body {
 }
 
 /* Sign Up */
+
+/* Favorites */
+.favoritesTitle {
+  text-align: center;
+}
+
+.forecastTitleAddBlock {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.addFavorites {
+  cursor: pointer;
+}
+
+.favoritesColumn {
+  display: flex;
+  flex-direction: column;
+}
+/* Favorites */

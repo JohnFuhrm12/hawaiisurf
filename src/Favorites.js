@@ -9,11 +9,44 @@ import swell from './static/swell.jpg';
 import travel from './static/travel.jpg';
 import surfboards from './static/surfboards.jpg';
 
+// Firebase imports
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
+import 'firebase/compat/auth';
+import { collection, doc, setDoc, deleteDoc, getDocs, query, where, limit } from "firebase/firestore";
+
+// Initialize Firebase Database
+firebase.initializeApp({
+    apiKey: "AIzaSyAzmdsZQLIhq6lZb1bGQRusNHWYEwF4Ny8",
+    authDomain: "hawaiisurf-b817d.firebaseapp.com",
+    projectId: "hawaiisurf-b817d",
+    storageBucket: "hawaiisurf-b817d.appspot.com",
+    messagingSenderId: "587941794922",
+    appId: "1:587941794922:web:2bf14e8ea71b007df7e613"
+})
+
+// Firebase Database
+const db = firebase.firestore();
+
 function Favorites( {...props} ) {
 
   const [carouselTitle, setCarouselTitle] = useState("Pipeline")
   const [currentIndex, setCurrentIndex] = useState(0)
   const [indexUpdate, setIndexUpdate] = useState(0)
+
+  const [favoritesItems, setFavoritesItems] = useState([]);
+
+  const favoritesRef = collection(db, "favorites");
+
+  useEffect(() => {
+    getFavoritesItems();
+  }, [])
+
+  const getFavoritesItems = async () => {
+    const favRef = query(favoritesRef, where('user', '==', props.name));
+    const currentQuerySnapshot = await getDocs(favRef);
+    setFavoritesItems(currentQuerySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id})));
+  };
 
   function updateIndex() {
     if (indexUpdate === 0) {
@@ -69,6 +102,14 @@ function Favorites( {...props} ) {
     window.location.reload(true);
   }
 
+  function showForecastInfo(e) {
+    props.setForecastInfo(true);
+    props.setFavorites(false);
+    props.setForecastLatitude(e.currentTarget.name);
+    props.setForecastLongitude(e.currentTarget.title);
+    props.setForecastLocation(e.currentTarget.alt);
+  }
+
   return (
     <>
     <div className='page'>
@@ -81,6 +122,18 @@ function Favorites( {...props} ) {
         </div>
       </div>
       <h1 className='favoritesTitle'>{props.name}'s Favorites</h1>
+      <div className='favoritesColumn'>
+        {favoritesItems.map((favorite) => {
+          return (
+            <>
+            <div className='forecastItem'>
+                  <h2 className='forecastTitle'>{favorite.locationName}</h2>
+                <img onClick={showForecastInfo} className='forecastIMG' src={favorite.locationIMG} name={favorite.locationLat} title={favorite.locationLong} alt={favorite.locationName}/>
+            </div>
+            </>
+          )
+        })}
+      </div>
       <div className='footer'>
         <h2 className='footerItem'>Hawai'i Surf</h2>
       </div>

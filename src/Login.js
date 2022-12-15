@@ -86,6 +86,13 @@ export default function Login( {onNameSubmit, ...props} ) {
       props.setHome(true);
       props.setLogin(false);
     }
+
+    function showFavorites() {
+      if (props.name !== null) {
+        props.setLogin(false);
+        props.setFavorites(true);
+      }
+    }
   
     return (
       <>
@@ -94,7 +101,7 @@ export default function Login( {onNameSubmit, ...props} ) {
         <h1 onClick={showHome} className='navHome'>Hawai'i Surf</h1>
         <div className='navbarRight'>
           <h1 onClick={showForecasts} className='navbarItem'>Forecasts</h1>
-          <h1 className='navbarItem'>Favorites</h1>
+          <h1 onClick={showFavorites} className='navbarItem'>Favorites</h1>
           {props.name === null ? <h1 onClick={showSignUp} className='navbarItem'>Sign Up</h1> : <></>}
         </div>
       </div>

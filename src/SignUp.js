@@ -54,6 +54,17 @@ export default function SignUp( {...props} ) {
       function logout() {
         props.setName(null);
       }
+
+      function showFavorites() {
+        if (props.name !== null) {
+          props.setSignUp(false);
+          props.setFavorites(true);
+        }
+        else {
+          props.setSignUp(false);
+          props.setLogin(true);
+        }
+      }
   
     return (
       <>
@@ -62,7 +73,7 @@ export default function SignUp( {...props} ) {
         <h1 onClick={showHome} className='navHome'>Hawai'i Surf</h1>
         <div className='navbarRight'>
           <h1 onClick={showForecasts} className='navbarItem'>Forecasts</h1>
-          <h1 className='navbarItem'>Favorites</h1>
+          <h1 onClick={showFavorites} className='navbarItem'>Favorites</h1>
           {props.name === null ? <h1 onClick={showLogin} className='navbarItem'>Login</h1> : <h1 onClick={logout} className='navbarItem'>Logout</h1>}
         </div>
       </div>
