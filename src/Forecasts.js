@@ -21,6 +21,26 @@ function Forecasts( {...props} ) {
     props.setLogin(true);
   }
 
+  function showSignUp() {
+    props.setForecasts(false);
+    props.setSignUp(true);
+  }
+
+  function logout() {
+    props.setName(null);
+  }
+
+  function showFavorites() {
+    if (props.name !== null) {
+      props.setForecasts(false);
+      props.setFavorites(true);
+    }
+    else {
+      props.setForecasts(false);
+      props.setLogin(true);
+    }
+  }
+
   function showForecastInfo(e) {
     props.setForecastInfo(true);
     props.setForecasts(false);
@@ -29,15 +49,20 @@ function Forecasts( {...props} ) {
     props.setForecastLocation(e.currentTarget.alt);
   }
 
+  function refresh() {
+    window.location.reload(true);
+  }
+
   return (
     <>
     <div className='page'>
       <div className='navbar'>
         <h1 onClick={showHome} className='navHome'>Hawai'i Surf</h1>
         <div className='navbarRight'>
-          <h1 className='navbarItem'>Forecasts</h1>
-          <h1 className='navbarItem'>Favorites</h1>
-          <h1 onClick={showLogin} className='navbarItem'>Login</h1>
+          <h1 onClick={refresh} className='navbarItem'>Forecasts</h1>
+          <h1 onClick={showFavorites} className='navbarItem'>Favorites</h1>
+          {props.name === null ? <h1 onClick={showLogin} className='navbarItem'>Login</h1> : <h1 onClick={logout} className='navbarItem'>Logout</h1>}
+          {props.name === null ? <h1 onClick={showSignUp} className='navbarItem'>Sign Up</h1> : <></>}
         </div>
       </div>
       <div className='forecastsMainTitleBlock'>

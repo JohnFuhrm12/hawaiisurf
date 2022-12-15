@@ -45,6 +45,15 @@ export default function SignUp( {...props} ) {
         setPassword("");
         setShowMessage(true);
       };
+
+      function showLogin() {
+        props.setSignUp(false);
+        props.setLogin(true);
+      }
+
+      function logout() {
+        props.setName(null);
+      }
   
     return (
       <>
@@ -54,6 +63,7 @@ export default function SignUp( {...props} ) {
         <div className='navbarRight'>
           <h1 onClick={showForecasts} className='navbarItem'>Forecasts</h1>
           <h1 className='navbarItem'>Favorites</h1>
+          {props.name === null ? <h1 onClick={showLogin} className='navbarItem'>Login</h1> : <h1 onClick={logout} className='navbarItem'>Logout</h1>}
         </div>
       </div>
         <div className="loginHeader">

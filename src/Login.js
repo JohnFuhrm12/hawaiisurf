@@ -77,6 +77,11 @@ export default function Login( {onNameSubmit, ...props} ) {
       }
     }
 
+    function showSignUp() {
+      props.setLogin(false);
+      props.setSignUp(true);
+    }
+
     function showHome() {
       props.setHome(true);
       props.setLogin(false);
@@ -90,6 +95,7 @@ export default function Login( {onNameSubmit, ...props} ) {
         <div className='navbarRight'>
           <h1 onClick={showForecasts} className='navbarItem'>Forecasts</h1>
           <h1 className='navbarItem'>Favorites</h1>
+          {props.name === null ? <h1 onClick={showSignUp} className='navbarItem'>Sign Up</h1> : <></>}
         </div>
       </div>
         <div className="loginHeader">
