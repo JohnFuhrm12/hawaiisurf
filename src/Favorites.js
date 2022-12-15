@@ -89,12 +89,12 @@ function Favorites( {...props} ) {
   }, [indexUpdate]);
 
   function showForecasts() {
-    props.setHome(false);
+    props.setFavorites(false);
     props.setForecasts(true);
   }
 
   function showLogin() {
-    props.setHome(false);
+    props.setFavorites(false);
     props.setLogin(true);
   }
 
@@ -134,7 +134,7 @@ function Favorites( {...props} ) {
             <div className='forecastItem'>
             <div className='forecastTitleAddBlock'>
               <h2 className='forecastTitle'>{favorite.locationName}</h2>
-              <h2 onClick={remove} className='addFavorites' data-name={favorite.locationName}>-</h2>
+              <h2 onClick={remove} className='subtFavorites' data-name={favorite.locationName}>-</h2>
             </div>
                 <img onClick={showForecastInfo} className='forecastIMG' src={favorite.locationIMG} name={favorite.locationLat} title={favorite.locationLong} alt={favorite.locationName}/>
             </div>

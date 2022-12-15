@@ -423,4 +423,38 @@ html, body {
   display: flex;
   flex-direction: column;
 }
+
+.addFavorites {
+  margin-left: 20px;
+  margin-bottom: 0;
+  padding-top: 10px;
+  font-size: 30px;
+  transition: 0.4s;
+  cursor: pointer;
+}
+
+.addFavorites:hover {
+  transition: 0.4s;
+  color: lime;
+  font-size: 40px;
+  transform: translate(0px, -20px);
+  margin-left: 25px;
+}
+
+.subtFavorites {
+  margin-left: 20px;
+  margin-bottom: 0;
+  padding-top: 10px;
+  font-size: 30px;
+  transition: 0.4s;
+  cursor: pointer;
+}
+
+.subtFavorites:hover {
+  transition: 0.4s;
+  color: red;
+  font-size: 40px;
+  transform: translate(0px, -20px);
+  margin-left: 25px;
+}
 /* Favorites */

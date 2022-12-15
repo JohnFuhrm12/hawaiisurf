@@ -120,11 +120,11 @@ function HomeScreen( {...props} ) {
         </div>
         <div className='catObject'>
           <h2 className='catTitle'>TRAVEL</h2>
-          <img src={travel} className='catImg' alt="Travel"/>
+          <a href='https://www.surfline.com/travel/united-states/hawaii-surfing-and-beaches/5855797' target="blank"><img src={travel} className='catImg' alt="Travel"/></a>
         </div>
         <div className='catObject'>
           <h2 className='catTitle'>EQUIPMENT</h2>
-          <img src={surfboards} className='catImg' alt="Swell"/>
+          <a href='https://magicseaweed.com/feature/hardware/10183/' target="blank"><img src={surfboards} className='catImg' alt="Equipment"/></a>
         </div>
       </div>
       <div className='footer'>
