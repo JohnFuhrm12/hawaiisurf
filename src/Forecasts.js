@@ -122,21 +122,33 @@ function Forecasts( {...props} ) {
                 <img onClick={showForecastInfo} className='forecastIMG' src={img2} name={props.jawsLat} title={props.jawsLong} alt='Jaws'/>
             </div>
             <div className='forecastItem'>
-                <h2 className='forecastTitle'>Waikiki</h2>
+            <div className='forecastTitleAddBlock'>
+              <h2 className='forecastTitle'>Waikiki</h2>
+              {props.name === null ? <></> : <h2 onClick={addToFavorites} className='addFavorites' data-img={waikikiImg} data-lat={props.waikikiLat} data-long={props.waikikiLong} data-name='Waikiki'>+</h2>}
+            </div>
                 <img onClick={showForecastInfo} className='forecastIMG' src={img3} name={props.waikikiLat} title={props.waikikiLong} alt='Waikiki'/>
             </div>
         </div>
         <div className='forecastRow'>
             <div className='forecastItem'>
-                <h2 className='forecastTitle'>Waimea Bay</h2>
+            <div className='forecastTitleAddBlock'>
+              <h2 className='forecastTitle'>Waimea Bay</h2>
+              {props.name === null ? <></> : <h2 onClick={addToFavorites} className='addFavorites' data-img={waimeaImg} data-lat={props.waimeaLat} data-long={props.waimeaLong} data-name='Waimea'>+</h2>}
+            </div>
                 <img onClick={showForecastInfo} className='forecastIMG' src={img4} name={props.waimeaLat} title={props.waimeaLong} alt='Waimea'/>
             </div>
             <div className='forecastItem'>
-                <h2 className='forecastTitle'>Haleiwa</h2>
+            <div className='forecastTitleAddBlock'>
+              <h2 className='forecastTitle'>Haleiwa</h2>
+              {props.name === null ? <></> : <h2 onClick={addToFavorites} className='addFavorites' data-img={haleiwaImg} data-lat={props.haleiwaLat} data-long={props.haleiwaLong} data-name='Haleiwa'>+</h2>}
+            </div>
                 <img onClick={showForecastInfo} className='forecastIMG' src={img5} name={props.haleiwaLat} title={props.haleiwaLong} alt='Haleiwa'/>
             </div>
             <div className='forecastItem'>
-                <h2 className='forecastTitle'>Honolua Bay</h2>
+            <div className='forecastTitleAddBlock'>
+              <h2 className='forecastTitle'>Honolua Bay</h2>
+              {props.name === null ? <></> : <h2 onClick={addToFavorites} className='addFavorites' data-img={honoluaImg} data-lat={props.honoluaLat} data-long={props.honoluaLong} data-name='Honolua'>+</h2>}
+            </div>
                 <img onClick={showForecastInfo} className='forecastIMG' src={img6} name={props.honoluaLat} title={props.honoluaLong} alt='Honolua'/>
             </div>
         </div>

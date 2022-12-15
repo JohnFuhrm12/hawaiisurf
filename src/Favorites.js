@@ -126,9 +126,11 @@ function Favorites( {...props} ) {
         {favoritesItems.map((favorite) => {
           return (
             <>
+            <div className='forecastRow'>
             <div className='forecastItem'>
                   <h2 className='forecastTitle'>{favorite.locationName}</h2>
                 <img onClick={showForecastInfo} className='forecastIMG' src={favorite.locationIMG} name={favorite.locationLat} title={favorite.locationLong} alt={favorite.locationName}/>
+            </div>
             </div>
             </>
           )
