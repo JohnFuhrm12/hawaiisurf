@@ -391,6 +391,10 @@ html, body {
   background-color: rgb(17, 71, 152);
   color: rgb(232, 232, 232);
 }
+
+.failMessage {
+  color: red;
+}
 /* Login */
 
 /* Sign Up */
