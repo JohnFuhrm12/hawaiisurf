@@ -10,50 +10,20 @@ import travel from './static/travel.jpg';
 import surfboards from './static/surfboards.jpg';
 
 function HomeScreen( {...props} ) {
+  const [currentSlide, setCurrentSlide] = useState(img1);
 
-  const [carouselTitle, setCarouselTitle] = useState("Pipeline")
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [indexUpdate, setIndexUpdate] = useState(0)
+  function changeSlide(operator) {
+    let slides = [img1, img2, img3];
+    let currIndex = slides.indexOf(currentSlide);
 
-  function updateIndex() {
-    if (indexUpdate === 0) {
-      setIndexUpdate(1)
+    if (operator === 'dec') {
+      slides[currIndex - 1] ? currIndex = currIndex - 1 : currIndex = 2;
+    } else if (operator === 'inc') {
+      slides[currIndex + 1] ? currIndex = currIndex + 1 : currIndex = 0;
     }
-    if (indexUpdate === 1) {
-      setIndexUpdate(0)
-    }
-  }
-
-  useEffect(() => {
-    const buttons = document.querySelectorAll("[data-carousel-button]")
-
-    if (currentIndex === 0) {
-      setCarouselTitle("Pipeline")
-    }
-    if (currentIndex === 1) {
-      setCarouselTitle("Jaws")
-    }
-    if (currentIndex === 2) {
-      setCarouselTitle("Waikiki")
-    }
-
-    buttons.forEach(button => {
-      button.addEventListener("click", () => {
-        const offset = button.dataset.carouselButton === "next" ? 1 : -1
-        const slides = button.closest("[data-carousel]").querySelector("[data-slides]")
     
-        const activeSlide = slides.querySelector("[data-active]")
-        let newIndex = [...slides.children].indexOf(activeSlide) + offset
-        if (newIndex < 0) newIndex = slides.children.length - 1
-        if (newIndex >= slides.children.length) newIndex = 0
-
-        setCurrentIndex(newIndex)
-
-        slides.children[newIndex].dataset.active = true
-        delete activeSlide.dataset.active
-        })
-    });
-  }, [indexUpdate]);
+    setCurrentSlide(slides[currIndex]);
+  }
 
   function showForecasts() {
     props.setHome(false);
@@ -101,17 +71,10 @@ function HomeScreen( {...props} ) {
           {props.name === null ? <h1 onClick={showSignUp} className='navbarItem'>Sign Up</h1> : <></>}
         </div>
       </div>
-      <div className='carouselBlock'>
-        <div className="carousel" data-carousel>
-            <button onClick={updateIndex} className="prev" data-carousel-button="prev">&#8249;</button>
-            <button onClick={updateIndex} className="next" data-carousel-button="next">&#8250;</button>
-            <ul data-slides>
-                <li className="slide" data-active><img src={img1} className="home-image" alt="Pipeline"/></li>
-                <li className="slide"><img src={img2} className="home-image" alt="Jaws"/></li>
-                <li className="slide"><img src={img3} className="home-image" alt="Waikiki"/></li>
-            </ul>
-          <div class="imgTitle">{carouselTitle}</div>
-        </div>
+      <div className="carousel" data-carousel>
+          <button onClick={() => changeSlide('dec')} className="prev" data-carousel-button="prev">&#8249;</button>
+          <button onClick={() => changeSlide('inc')} className="next" data-carousel-button="next">&#8250;</button>
+          <img src={currentSlide} className="home-image" alt="Home"/>
       </div>
       <div className='homeCategories'>
         <div className='catObject'>
