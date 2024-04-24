@@ -75,6 +75,7 @@ function HomeScreen( {...props} ) {
           <button onClick={() => changeSlide('dec')} className="prev" data-carousel-button="prev">&#8249;</button>
           <button onClick={() => changeSlide('inc')} className="next" data-carousel-button="next">&#8250;</button>
           <img src={currentSlide} className="home-image" alt="Home"/>
+          <h1 id='homeTitle'>FORECASTS | CONDITIONS | EQUIPMENT</h1>
       </div>
       <div className='homeCategories'>
         <div className='catObject'>
